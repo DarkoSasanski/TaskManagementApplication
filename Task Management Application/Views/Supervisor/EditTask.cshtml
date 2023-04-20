@@ -1,0 +1,55 @@
+﻿@model Task_Management_Application.Models.WorkTask
+@{
+    ViewBag.Title = "EditTask";
+    Layout = "~/Views/Shared/_SupervisorLayout.cshtml";
+}
+
+<h2 class="text-center">Edit Task</h2>
+<hr />
+
+@using (Html.BeginForm("EditTask", "Supervisor"))
+{
+    <div class="mt-4">
+        <div class="form-group row">
+            @Html.LabelFor(m => m.Title, new { @class = "col-form-label col-md-3 font-weight-bold text-right" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(m => m.Deadline, new { @class = "col-form-label col-md-3 font-weight-bold text-right" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.Deadline, new { @type = "datetime-local", @class = "form-control datepicker" })
+                @Html.ValidationMessageFor(m => m.Deadline, "", new { @class = "text-danger" })
+                <span class="text-danger">@ViewBag.Message</span>
+
+            </div>
+        </div>
+        <div class="form-group row">
+            @Html.LabelFor(m => m.Description, new { @class = "col-form-label col-md-3 font-weight-bold text-right" })
+            <div class="col-md-6">
+                @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-6">
+                @Html.HiddenFor(m => m.Status)
+                @Html.HiddenFor(m => m.SupervisorUserName)
+                @Html.HiddenFor(m => m.Finished)
+                @Html.HiddenFor(m => m.Forfeited)  
+                @Html.HiddenFor(m => m.Type)
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <input type="submit" value="Submit" class="btn btn-default w-100" />
+            </div>
+        </div>
+    </div>
+}
+
+

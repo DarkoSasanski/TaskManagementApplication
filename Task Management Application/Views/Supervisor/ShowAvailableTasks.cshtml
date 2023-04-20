@@ -1,0 +1,60 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<WorkTask>
+@{
+    ViewBag.Title = "ShowAvailableTasks";
+    Layout = "~/Views/Shared/_SupervisorLayout.cshtml";
+}
+
+<h2 class="text-center">Available Tasks</h2>
+<hr />
+<table class="table" id="avaltaskstable">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+
+            <th>
+                Deadline
+            </th>
+            <th>
+                Applications
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (WorkTask task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>
+                    @if(task.Deadline<DateTime.Now)
+                    {
+                        <span class="text-danger">Time's up</span>
+                    }
+                    else
+                    {
+                        <span>@task.Deadline</span>
+                    }
+                </td>
+                <td>
+                    @task.ApplicationUsers.Count
+                </td>
+                <td>@Html.ActionLink("Show more info", "ShowTask", new { id = task.Id }, null)</td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#avaltaskstable").DataTable();
+        })
+    </script>
+}
+

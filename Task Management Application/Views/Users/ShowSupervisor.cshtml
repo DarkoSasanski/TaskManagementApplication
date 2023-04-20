@@ -1,0 +1,196 @@
+﻿@using Task_Management_Application.Models;
+@model ApplicationUser
+@{
+    ViewBag.Title = "ShowSupervisor";
+    Layout = ViewBag.Layout;
+}
+@{
+    ApplicationDbContext context = new ApplicationDbContext();
+    List<WorkTask> tasks = context.WorkTasks.Where(z => z.SupervisorUserName.Equals(Model.UserName)).ToList();
+}
+<h2 class="text-center">Supervisor Record:</h2>
+<hr />
+<div class=" row mt-4">
+    <div class="col-md-6">
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Id)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.Id)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.FirstName)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.FirstName)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.LastName)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.LastName)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.UserName)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.UserName)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Email)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.Email)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                Total Supervised Tasks
+            </div>
+            <div class="col-md-7">
+                @tasks.Count
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-11">
+                <a href="/@ViewBag.Role/">Back to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class=" row mt-4">
+    @if (User.IsInRole("Administrator") && tasks.Count==0)
+    {
+        <div class="col-md-5 mb-3">
+            @Html.ActionLink("Delete Supervisor", "DeleteUser", "Administrator", new { id = Model.Id }, new { @class = "btn btn-primary w-100" })
+        </div>
+    }
+    @if (ViewBag.Message != null)
+    {
+        <div class="row form-group">
+            <div class="col-md-11 offset-1 text-center text-danger">
+                @ViewBag.Message
+            </div>
+        </div>
+    }
+    <div class="col-md-12">
+        <h3>Supervised Tasks</h3>
+        <hr />
+        @using (Ajax.BeginForm("FilterSuperTasks", "Users",
+            new AjaxOptions
+            {
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "GET",
+                OnFailure = "searchFailed",
+                UpdateTargetId = "supertaskstable"
+            }))
+        {
+            <div class="form-group row mb-4">
+                <label for="criteria" class="col-form-label col-md-1 font-weight-bold">Criteria</label>
+                <select name="criteria" id="criteria" class="form-control col-md-3">
+                    <option value="All">All</option>
+                    <option value="Unassigned">Unassigned</option>
+                    <option value="WaitingForApps">Waiting For Applications</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Fulfilled">Fulfilled</option>
+                    <option value="Forfeited">Forfeited</option>
+                    <option value="Cancelled">Cancelled</option>
+                    <option value="Unfulfilled">Unfulfilled</option>
+                </select>
+                <input type="hidden" name="superusername" value="@Model.UserName" />
+                <input type="hidden" name="role" value="@ViewBag.Role" />
+                <button class="btn btn-default col-md-1 ml-2" id="filterbutton">Filter</button>
+            </div>
+        }
+        <table class="table" id="supertaskstable">
+            <thead>
+                <tr>
+                    <th>
+                        Title
+                    </th>
+                    <th>
+                        Status
+                    </th>
+                    <th>
+                        Deadline
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (WorkTask task in tasks)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => task.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(m => task.Status)
+                        </td>
+                        <td>
+                            @{
+                                if (task.Status.Equals(TaskStatus.Fulfilled))
+                                {
+                                    <span class="text-success">On time fulfilled</span>
+                                }
+                                else if (task.Status.Equals(TaskStatus.Forfeited) || task.Status.Equals(TaskStatus.Unfulfilled) || task.Status.Equals(TaskStatus.Cancelled))
+                                {
+                                    <span class="text-danger">The task was not fulfilled</span>
+                                }
+                                else if (DateTime.Now > task.Deadline)
+                                {
+                                    <span class="text-danger">Time's up</span>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(m => task.Deadline)
+                                }
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Show more info", "ShowTask", "Administrator", new { id = task.Id }, null)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+
+</div>
+
+
+
+@section Scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $("#supertaskstable").DataTable(
+                {
+                    "paging": false,
+                    "ordering": false,
+                    "searching": false,
+                    "info": false
+                }
+            );
+        })
+    </script>
+}
+

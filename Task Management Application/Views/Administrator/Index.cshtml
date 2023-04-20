@@ -1,0 +1,122 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<ApplicationUser>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdministratorLayout.cshtml";
+}
+@{
+    ApplicationDbContext context = new ApplicationDbContext();
+    List<WorkTask> tasks = context.WorkTasks.ToList();
+}
+
+<h2 class="text-center">Registered Users</h2>
+<hr />
+<table class="table" id="users">
+    <thead>
+        <tr>
+            <th>
+                First Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                UserName
+            </th>
+            <th>
+                Role
+            </th>
+            <th>
+
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ApplicationUser user in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => user.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.UserName)
+                </td>
+                <td>
+                    @{
+                        var role = "No role";
+                        if (user.Roles.Count != 0)
+                        {
+                            var roleid = user.Roles.ElementAt(0).RoleId;
+                            role = context.Roles.Find(roleid).Name;
+                        }
+                    }
+                    <span>@role</span>
+                </td>
+                <td>
+                    @if (!role.Equals("Administrator"))
+                    {
+                        if (role.Equals("Worker") && user.Tasks.Count == 0)
+                        {
+                            <button class="btn btn-link btn-sm js-delete" style="font-size:14px; padding-top:0; padding-bottom:0" data-user-id="@user.Id">Delete</button>
+                        }
+                        if (role.Equals("Supervisor") && !tasks.Any(z => z.SupervisorUserName.Equals(user.UserName)))
+                        {
+                            <button class="btn btn-link btn-sm js-delete" style="font-size:14px; padding-top:0; padding-bottom:0" data-user-id="@user.Id">Delete</button>
+                        }
+                        if (user.Roles.Count == 0)
+                        {
+                            <button class="btn btn-link btn-sm js-delete" style="font-size:14px; padding-top:0; padding-bottom:0" data-user-id="@user.Id">Delete</button>
+                        }
+                    }
+                </td>
+                <td>
+                    @if (role.Equals("Worker"))
+                    {
+                        @Html.ActionLink("Show worker record", "ShowWorker", "Users", new { id = user.Id, layout = Layout }, null)
+
+                    }
+                    @if (role.Equals("Supervisor"))
+                    {
+                        @Html.ActionLink("Show supervisor record", "ShowSupervisor", "Users", new { id = user.Id, layout = Layout }, null)
+                    }
+                    @if (role.Equals("No role"))
+                    {
+                        @Html.ActionLink("Add to role", "AddToRole", "Account", new { Email = user.Email, FName = user.FirstName, Type = "Admin" }, null)
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#users").DataTable();
+            $("#users .js-delete").on("click", function () {
+                var button = $(this);
+                bootbox.confirm("Are you sure you want to delete the user", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: "/Administrator/DeleteUser/" + button.attr("data-user-id"),
+                            method: "GET",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+                            }
+                        })
+                    }
+                })
+            })
+        })
+    </script>
+}
+
+
+
+

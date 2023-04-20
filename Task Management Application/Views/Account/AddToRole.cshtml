@@ -1,0 +1,49 @@
+﻿@model Task_Management_Application.Models.AddToRoleViewModel
+@{
+    ViewBag.Title = "AddToRole";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+<div class="row my-5">
+    <div class="col-md-12"></div>
+</div>
+<div class="row my-5">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="jumbotron" style="box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
+            @using (Html.BeginForm("AddToRole", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <h3 class="text-center">
+                    @if(Model.Type.Equals("Admin"))
+                    {
+                        <span>Adding @ViewBag.Name to role</span>
+                    }
+                    else
+                    {
+                        <span>Welcome, @ViewBag.Name</span>
+                    }
+                </h3>
+                <hr />
+                <h4 class="text-center my-3">Please select a role</h4>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.DropDownListFor(m => m.SelectedRole, new SelectList(Model.Roles), new { @class = "form-control" })
+                    </div>
+                    @Html.HiddenFor(m => m.Email)
+                    @Html.HiddenFor(m => m.Type)
+                </div>
+                <div class="form-group text-center">
+                    <div class="col-md-offset-2 col-md-12">
+                        <input type="submit" value="Submit" class="btn btn-primary" />
+                    </div>
+                </div>
+            }
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

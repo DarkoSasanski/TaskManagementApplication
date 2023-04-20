@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<div class="row">
+    <div class="col-md-12" style="overflow:hidden; padding: 0px 22em;">
+        <img src="~/Content/Images/rsz_403_error_forbidden-bro.png" class="img-fluid" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h2 class="text-center">
+            @ViewBag.Message
+        </h2>
+        <a href="/@ViewBag.Role" class="h4 text-primary">Back To Dashboard</a>
+    </div>
+</div>

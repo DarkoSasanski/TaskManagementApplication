@@ -1,0 +1,45 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<WorkTask>
+@{
+    ViewBag.Title = "ShowUnassignedTasks";
+    Layout = "~/Views/Shared/_SupervisorLayout.cshtml";
+}
+
+<h2 class="text-center">Unassigned Tasks</h2>
+<hr />
+<table class="table" id="unasstaskstable">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+
+            <th>
+                Deadline
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (WorkTask task in Model)
+        {
+            <tr>
+                <td>@task.Title</td>
+                <td>@task.Deadline</td>
+                <td>@Html.ActionLink("Show more info", "ShowTask", new { id = task.Id })</td>
+            </tr>
+            
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#unasstaskstable").DataTable();
+        })
+    </script>
+}
+

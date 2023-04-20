@@ -1,0 +1,35 @@
+﻿@model Task_Management_Application.Models.ViewModels.AssignATaskViewModel
+@{
+    ViewBag.Title = "AddAWorker";
+    Layout = "~/Views/Shared/_SupervisorLayout.cshtml";
+}
+
+<h2 class="text-center">Add A Worker</h2>
+<hr />
+
+@using (Html.BeginForm("AddAWorker", "Supervisor"))
+{
+    <div class="mt-4">
+        <div class="form-group row">
+            @Html.LabelFor(m => m.WorkerUsername, new { @class = "col-form-label col-md-3 font-weight-bold text-right" })
+            <div class="col-md-6">
+                @Html.TextBoxFor(m => m.WorkerUsername, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.WorkerUsername, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div>
+            @Html.HiddenFor(m => m.TaskId)
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <input type="submit" value="Add" class="btn btn-default w-100" />
+            </div>
+        </div>
+    </div>
+}
+
+

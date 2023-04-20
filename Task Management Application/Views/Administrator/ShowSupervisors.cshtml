@@ -1,0 +1,67 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<ApplicationUser>
+@{
+    ViewBag.Title = "ShowSupervisors";
+    Layout = "~/Views/Shared/_AdministratorLayout.cshtml";
+}
+
+<h2 class="text-center">Supervisors</h2>
+<hr />
+<table class="table" id="supers">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.UserName)
+            </th>
+            <th>
+                Supervised Tasks
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ApplicationUser user in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => user.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.UserName)
+                </td>
+                <td>
+                    @{ 
+                        ApplicationDbContext context = new ApplicationDbContext();
+                        var count = context.WorkTasks.Where(z => z.SupervisorUserName.Equals(user.UserName)).ToList().Count();
+                    }
+                    @count
+                </td>
+                <td>
+                    @Html.ActionLink("Show supervisor record", "ShowSupervisor", "Users", new { id = user.Id, layout = Layout }, null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#supers").DataTable();
+        })
+    </script>
+}
+
+
+

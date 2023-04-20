@@ -1,0 +1,67 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<ApplicationUser>
+@{
+    ViewBag.Title = "ShowWorkers";
+    Layout = "~/Views/Shared/_AdministratorLayout.cshtml";
+}
+
+<h2 class="text-center">Workers</h2>
+<hr />
+<table class="table" id="workers">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.UserName)
+            </th>
+            <th>
+                Success ratio
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (ApplicationUser user in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => user.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => user.UserName)
+                </td>
+                <td>
+                    @{
+                        var ratio = (user.Tasks.FindAll(z => z.Status.Equals(TaskStatus.Fulfilled) && !z.ForfeitedWorkers.Any(w => w.Username.Equals(user.UserName))).Count) /
+                            (((user.Tasks.FindAll(z => z.Status.Equals(TaskStatus.Fulfilled)).Count + user.Tasks.FindAll(z => z.Status.Equals(TaskStatus.Unfulfilled)).Count + user.Tasks.FindAll(z => z.Status.Equals(TaskStatus.Cancelled)).Count) + user.Tasks.FindAll(z => z.Status.Equals(TaskStatus.Forfeited)).Count) * 1.0);
+                    }
+                    <span>@(Math.Round(ratio, 3))</span>
+                </td>
+                <td>
+                    @Html.ActionLink("Show worker record", "ShowWorker", "Users", new { id = user.Id, layout=Layout }, null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#workers").DataTable();
+        })
+    </script>
+}
+
+
+

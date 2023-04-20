@@ -1,0 +1,385 @@
+﻿@using Task_Management_Application.Models;
+@model WorkTask
+@{
+    ViewBag.Title = "ShowTask";
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+<h2 class="text-center">Task Details:</h2>
+<hr />
+<div class=" row mt-4">
+    <div class="col-md-6">
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Title)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.Title)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Status)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.Status)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Description)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.Description)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.Add_Remarks)
+            </div>
+
+            <div class="col-md-7">
+                @if (Model.Add_Remarks.Count == 0)
+                {
+                    <span>No additional remarks</span>
+                }
+                else
+                {
+                    <ul class="pl-3">
+                        @foreach (var rem in Model.Add_Remarks)
+                        {
+                            <li>@rem.Text</li>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @if (Model.Status.Equals(TaskStatus.WaitingForApps))
+                {
+                    <span>Application </span>
+                }
+                @Html.DisplayNameFor(model => model.Deadline)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.Deadline)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                Time left
+            </div>
+
+            <div class="col-md-7">
+                @{
+                    if (Model.Status.Equals(TaskStatus.Fulfilled))
+                    {
+                        <span class="text-success">The task was on time fulfilled</span>
+                    }
+                    else if (Model.Status.Equals(TaskStatus.Forfeited) || Model.Status.Equals(TaskStatus.Unfulfilled) || Model.Status.Equals(TaskStatus.Cancelled))
+                    {
+                        <span class="text-danger">The task was not fulfilled</span>
+                    }
+                    else if (DateTime.Now > Model.Deadline)
+                    {
+                        <span class="text-danger">Time's up, the deadline was till @Model.Deadline</span>
+                    }
+                    else
+                    {
+                        TimeSpan interval = Model.Deadline - DateTime.Now;
+                        var days = interval.Days;
+                        var hours = interval.Hours;
+                        var minutes = interval.Minutes;
+                        var seconds = interval.Seconds;
+                        if (days > 0)
+                        {
+                            <span>
+                                @days
+                            </span>
+                            if (days == 1)
+                            {
+                                <span>Day</span>
+                            }
+                            else
+                            {
+                                <span>Days</span>
+                            }
+                        }
+                        if (hours > 0)
+                        {
+                            <span>
+                                @hours
+                            </span>
+                            if (hours == 1)
+                            {
+                                <span>Hour</span>
+                            }
+                            else
+                            {
+                                <span>Hours</span>
+                            }
+                        }
+                        if (days == 0 && minutes > 0)
+                        {
+                            <span>
+                                @minutes
+                            </span>
+                            if (minutes == 1)
+                            {
+                                <span>Minute</span>
+                            }
+                            else
+                            {
+                                <span>Minutes</span>
+                            }
+                        }
+                        if (days == 0 && hours == 0 && seconds >= 0)
+                        {
+                            <span>
+                                @seconds
+                            </span>
+                            if (seconds == 1)
+                            {
+                                <span>Second</span>
+                            }
+                            else
+                            {
+                                <span>Seconds</span>
+                            }
+                        }
+                        <span> left</span>
+                    }
+                }
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @Html.DisplayNameFor(model => model.SupervisorUserName)
+            </div>
+
+            <div class="col-md-7">
+                @Html.DisplayFor(model => model.SupervisorUserName)
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="col-md-4 font-weight-bold">
+                @{ var type = "";}
+                @if (Model.Status.Equals(TaskStatus.WaitingForApps))
+                {
+                    <span>Applications</span>
+                    type = "applications";
+                }
+                else
+                {
+                    <span>Assigned Workers</span>
+                    type = "assigned workers";
+                }
+            </div>
+
+            <div class="col-md-7">
+                @if (Model.ApplicationUsers.Count == 0)
+                {
+                    <p>No @type yet </p>
+                }
+                else
+                {
+                    <ul class="pl-3">
+
+                        @foreach (var user in Model.ApplicationUsers)
+                        {
+                            <li>@user.UserName</li>
+                        }
+                    </ul>
+
+                }
+            </div>
+        </div>
+        @if (Model.Status.Equals(TaskStatus.Assigned))
+        {
+            <div class="row form-group">
+                <div class="col-md-4 font-weight-bold">
+                    Finished Workers
+                </div>
+
+                <div class="col-md-7">
+                    @if (Model.FinishedWorkers.Count == 0)
+                    {
+                        <p>No finished workers yet </p>
+                    }
+                    else
+                    {
+                        <ul class="pl-3">
+
+                            @foreach (var user in Model.FinishedWorkers)
+                            {
+                                <li>@user.Username</li>
+                            }
+                        </ul>
+
+                    }
+                </div>
+            </div>
+        }
+        @if (Model.Status.Equals(TaskStatus.Assigned) && Model.ForfeitedWorkers.Count != 0)
+        {
+            <div class="row form-group">
+                <div class="col-md-4 font-weight-bold">
+                    Forfeited Workers
+                </div>
+
+                <div class="col-md-7">
+                    <ul class="pl-3">
+
+                        @foreach (var user in Model.ForfeitedWorkers)
+                        {
+                            <li>@user.Username</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+        @if (ViewBag.Message != null)
+        {
+            <div class="row form-group">
+                <div class="col-md-11 text-center @ViewBag.Class">
+                    @ViewBag.Message
+                </div>
+            </div>
+        }
+        @if (!(DateTime.Now > Model.Deadline))
+        {
+            if (Model.Status.Equals(TaskStatus.WaitingForApps))
+            {
+                <div class="row form-group">
+                    <div class="col-md-11">
+                        @Html.ActionLink("Apply", "Apply", "Worker", new { id = Model.Id }, new { @class = "btn btn-primary w-100" })
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-11">
+                        @Html.ActionLink("Withdrew Application", "WithdrewApplication", "Worker", new { id = Model.Id }, new { @class = "btn btn-primary w-100" })
+                    </div>
+                </div>
+            }
+            if (Model.Finished < Model.ApplicationUsers.Count && Model.Status.Equals(TaskStatus.Assigned))
+            {
+                <div class="row form-group">
+                    <div class="col-md-11">
+                        @Html.ActionLink("Mark as Fulfilled", "Finish", "Worker", new { id = Model.Id }, new { @class = "btn btn-primary w-100" })
+                    </div>
+                </div>
+            }
+            if (Model.Forfeited < Model.ApplicationUsers.Count && Model.Status.Equals(TaskStatus.Assigned))
+            {
+                <div class="row form-group">
+                    <div class="col-md-11">
+                        @Html.ActionLink("Forfeit", "Forfeit", "Worker", new { id = Model.Id }, new { @class = "btn btn-primary w-100" })
+                    </div>
+                </div>
+            }
+        }
+        <div class="row form-group">
+            <div class="col-md-11">
+                @Html.ActionLink("Back to Dashboard", "Index")
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Logs:</h5>
+            </div>
+            <div class="col-md-3 text-right">
+                @if (DateTime.Now < Model.Deadline && Model.Status.Equals(TaskStatus.Assigned))
+                {
+                    @Html.ActionLink("Add a new log", "AddALog", "Worker", new { id = Model.Id }, null)
+                }
+            </div>
+            <div class="col-md-3 text-right">
+                @if (!(Model.Status.Equals(TaskStatus.Unassigned) || Model.Status.Equals(TaskStatus.WaitingForApps)))
+                {
+                    @Ajax.ActionLink("Show my logs", "ShowMyLogs", new { id = Model.Id }, new AjaxOptions
+                       {
+                            UpdateTargetId = "logsList",
+                            HttpMethod = "GET",
+                            InsertionMode = InsertionMode.Replace
+                       })
+                }
+            </div>
+            <div class="col-md-12 text-center text-danger">
+                @if (ViewBag.LogMessage != null)
+                {
+                    <span>@ViewBag.LogMessage</span>
+
+                }
+            </div>
+        </div>
+        <ul class="list-group" id="logsList">
+            @if (Model.TaskLogs.Count == 0)
+            {
+                <li class="list-group-item">
+                    No logs are added yet
+                </li>
+            }
+            else
+            {
+                foreach (var log in Model.TaskLogs)
+                {
+                    <li class="list-group-item">
+                        <span class="lead">@log.Title</span> <br />
+                        @log.Text <br />
+                        <span class="blockquote-footer" style="font-size:0.85em">
+                            Added by @log.FirstName @log.LastName at @log.Time_Created
+                        </span>
+                    </li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+<div class=" row mt-4">
+    <div class="col-md-12">
+        <h4>Task Forum:</h4>
+    </div>
+    @if (Model.QuestionAndAnswers.Count != 0)
+    {
+        foreach (var obj in Model.QuestionAndAnswers)
+        {
+            <div class="card mt-2 w-100" style="font-size: 1.1em; border-color: rgb(43, 43, 146) ">
+                <div class="card-header text-white" style="background-color: rgb(43, 43, 146) ">
+                    @obj.Question <br />
+                    <span class="blockquote-footer text-white">
+                        Asked by @obj.FirstName @obj.LastName at @obj.Asking_Time
+                    </span>
+                </div>
+                <div class="card-body">
+                    @foreach (var a in obj.Answers)
+                    {
+                        <div class="card-text mt-1">
+                            @a.Text
+                        </div>
+                        <span class="blockquote-footer">
+                            Answered by @a.FirstName @a.LastName at @a.TimeAnswered
+                        </span>
+                    }
+                    <div class="card-text mt-2">
+                        @Html.ActionLink("Add an Answer", "AnswerAQuestion", "WorkTasks", new { id = obj.Id, layout = Layout }, null)
+                    </div>
+
+                </div>
+            </div>
+        }
+    }
+    <div class="col-md-12 my-4">
+        @Html.ActionLink("Ask a Question", "AskAQuestion", "WorkTasks", new { id = Model.Id, layout = Layout }, new { @class = "btn btn-secondary" })
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+} 

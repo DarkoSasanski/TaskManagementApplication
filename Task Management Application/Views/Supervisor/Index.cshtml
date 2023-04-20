@@ -1,0 +1,72 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<WorkTask>
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_SupervisorLayout.cshtml";
+}
+
+<h2 class="text-center">Your Tasks</h2>
+<hr />
+<table class="table" id="taskstable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Deadline)
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (WorkTask task in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => task.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => task.Status)
+                </td>
+                <td>
+                    @{
+                        if (task.Status.Equals(TaskStatus.Fulfilled))
+                        {
+                            <span class="text-success">On time fulfilled</span>
+                        }
+                        else if (task.Status.Equals(TaskStatus.Forfeited) || task.Status.Equals(TaskStatus.Unfulfilled) || task.Status.Equals(TaskStatus.Cancelled))
+                        {
+                            <span class="text-danger">The task was not fulfilled</span>
+                        }
+                        else if (DateTime.Now > task.Deadline)
+                        {
+                            <span class="text-danger">Time's up</span>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(m => task.Deadline)
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Show more info", "ShowTask", "Supervisor", new { id = task.Id }, null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#taskstable").DataTable();
+        })
+    </script>
+}
+

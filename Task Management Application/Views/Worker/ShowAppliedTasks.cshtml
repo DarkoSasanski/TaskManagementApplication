@@ -1,0 +1,63 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<WorkTask>
+@{
+    ViewBag.Title = "ShowAppliedTasks";
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+
+<h2 class="text-center">Tasks For Which You Have Applied</h2>
+<hr />
+<table class="table" id="apptaskstable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.Title)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(m => m.Deadline)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.SupervisorUserName)
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (WorkTask task in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => task.Title)
+                </td>
+                <td>
+                    @if (DateTime.Now > task.Deadline)
+                    {
+                        <span class="text-danger">Time's up</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(m => task.Deadline)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(m => task.SupervisorUserName)
+                </td>
+                <td>
+                    @Html.ActionLink("Show more info", "ShowTask", "Worker", new { id = task.Id }, null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $("#apptaskstable").DataTable();
+        })
+    </script>
+}
+

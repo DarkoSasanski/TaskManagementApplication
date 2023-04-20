@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Contact";
+    Layout = "~/Views/Shared/_HomeLayout.cshtml";
+}
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+        <div class="jumbotron mx-5 text-center">
+            <h2 class="text-center">Developer's Personal Information</h2>
+            <hr />
+            <div class="text-center">
+                <img src="~/Content/Images/FB_IMG_1582898955869.jpg" class="img-fluid" style="max-height:420px"/>
+            </div>
+            <h3 class="text-center">Darko Sasanski</h3>
+            <p class="lead text-center">
+                3rd year software engineer student at FCSE - Skopje
+            </p>
+            <address class="text-center">
+                <strong>ID number:</strong><br />201065<br />
+                <strong>School email:</strong><br />   <a href="mailto:darko.sasanski@students.finki.ukim.mk">darko.sasanski@students.finki.ukim.mk</a><br />
+                <strong>Private email:</strong><br /> <a href="mailto:darko.sasanski@gmail.com">darko.sasanski@gmail.com</a>
+            </address>
+            @Html.ActionLink("<< Back to the home page", "Index", "Home", new { @class = "btn btn-default" })
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>

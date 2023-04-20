@@ -1,0 +1,13 @@
+﻿@{
+    Layout= "~/Views/Shared/_HomeLayout.cshtml";
+    ViewBag.Title = "About";
+}
+@Html.ActionLink("<< Back to the home page", "Index", "Home", new {@class="btn btn-default"})
+<h2>About the Task Management Application</h2>
+<hr />
+<p class="lead">This application will enable management, searching, review and assignment of tasks in an organization and will aim to facilitate all concerned and responsible employees in working with a large number of tasks.</p>
+<p class="lead">There are three types of users: Administrators, Supervisors and ordinary employees(workers). The supervisors create the tasks, define a deadline for their fulfillment, assign them to one employee or a certain team of employees and then observe the work of the responsible employees until the completion of the specific task, that is, until the employees mark that they have fulfilled the assigned task or until the deadline for the task has not expired. </p>
+<p class="lead">In addition, workers can apply to take over a certain task, so that one of the supervisors (the one who created the task) can decide according to the applications to whom to assign the task. </p>
+<p class="lead">All users can search the tasks and view detailed information about the selected task, and also in order to solve the tasks more easily, the application enables communication (in the form of a forum for a specific task) between the supervisors and the employees responsible for a specific task. </p>
+<p class="lead">Administrators are responsible for overseeing the complete process of managing, assigning and executing tasks. They can cancel a specific assignment, assign additional remarks to tasks, and delete a specific task.</p>
+<p class="lead">-The Developer</p>

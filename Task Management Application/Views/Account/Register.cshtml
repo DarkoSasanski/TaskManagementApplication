@@ -1,0 +1,78 @@
+﻿@model Task_Management_Application.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_AccountLayout.cshtml";
+}
+
+
+<div class="row my-5">
+    <div class="col-md-12"></div>
+</div>
+<div class="row my-5">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="jumbotron" style="box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;">
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <h4 class="text-center">Create a new account</h4>
+                <hr />
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FirstName, new { @class = "col-md-12 control-label" })
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control w-100" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.LastName, new { @class = "col-md-12 control-label" })
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(m => m.LastName, new { @class = "form-control w-100" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Username, new { @class = "col-md-12 control-label" })
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control w-100" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, new { @class = "col-md-12 control-label" })
+                    <div class="col-md-12">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control w-100" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-12 control-label" })
+                    <div class="col-md-12">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control m-auto" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-12 control-label" })
+                    <div class="col-md-12">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control m-auto" })
+                    </div>
+                </div>
+                <div class="form-group  text-center">
+                    <div class="col-md-offset-2 col-md-12">
+                        <input type="submit" class="btn btn-primary" value="Register" />
+                    </div>
+                    <div class="mt-2 text-center">
+                        Already have an account?&nbsp;@Html.ActionLink("Log in", "Login", "Account")
+                    </div>
+
+                    <div class="mt-2 text-center">
+                        @Html.ActionLink("Back to the home page", "Index", "Home")
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

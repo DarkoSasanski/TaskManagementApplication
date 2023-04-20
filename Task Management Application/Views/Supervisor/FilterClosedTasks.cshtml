@@ -1,0 +1,56 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<WorkTask>
+<table class="table" id="closedtaskstable">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Worker
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() == 0)
+        {
+            <tr>
+                <td colspan="4" class="dataTables_empty">
+                    No matching records found
+                </td>
+            </tr>
+        }
+        @foreach (WorkTask task in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => task.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => task.Status)
+                </td>
+                <td>
+                    @if (task.ApplicationUsers.Count == 1)
+                    {
+                        <span>@task.ApplicationUsers.ElementAt(0).UserName</span>
+                    }
+                    else
+                    {
+                        <span>Group task</span>
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Show more info", "ShowTask", "Supervisor", new { id = task.Id }, null)
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

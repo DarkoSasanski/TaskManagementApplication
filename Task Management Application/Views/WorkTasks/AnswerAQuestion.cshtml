@@ -1,0 +1,39 @@
+﻿@using Task_Management_Application.Models.ViewModels;
+@model AnswerAQuestionViewModel
+@{
+    ViewBag.Title = "AskAQuestion";
+    Layout = Model.Layout;
+}
+
+<h2 class="text-center">Answer the Question</h2>
+<hr />
+
+@using (Html.BeginForm("AnswerAQuestion", "WorkTasks"))
+{
+    <div class="mt-4">
+        <div class="form-group row">
+            @Html.LabelFor(m => m.Answer, new { @class = "col-form-label col-md-3 font-weight-bold text-right" })
+            <div class="col-md-6">
+                @Html.TextAreaFor(m => m.Answer, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Answer, "", new { @class = "text-danger" })
+
+            </div>
+        </div>
+        <div>
+            @Html.HiddenFor(m => m.Object_Id)
+            @Html.HiddenFor(m => m.Layout)
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-3">
+            </div>
+            <div class="col-md-6">
+                <input type="submit" value="Submit" class="btn btn-default w-100" />
+            </div>
+        </div>
+    </div>
+}
+
+
+
+

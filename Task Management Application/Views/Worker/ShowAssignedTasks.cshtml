@@ -1,0 +1,94 @@
+﻿@using Task_Management_Application.Models;
+@model IEnumerable<WorkTask>
+@{
+    ViewBag.Title = "ShowAssignedTasks";
+    Layout = "~/Views/Shared/_WorkerLayout.cshtml";
+}
+<h2 class="text-center">Assigned Tasks</h2>
+<hr />
+@using (Ajax.BeginForm("FilterTasks", "Worker",
+    new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "GET",
+        OnFailure = "searchFailed",
+        UpdateTargetId = "asstaskstable"
+    }))
+{
+<div class="form-group row mb-4">
+    <label for="criteria" class="col-form-label col-md-1 font-weight-bold">Criteria</label>
+    <select name="criteria" id="criteria" class="form-control col-md-3">
+        <option value="All">All</option>
+        <option value="Individual">Individual</option>
+        <option value="Group">Group</option>
+        <option value="NoTimeup">Still time left</option>
+        <option value="Timeup">No time left</option>
+        <option value="Fulfilled">Marked as Fulfilled</option>
+        <option value="Forfeited">Marked as Forfeited</option>
+    </select>
+    <button class="btn btn-default col-md-1 ml-2" id="filterbutton">Filter</button>
+</div>
+}
+<table class="table" id="asstaskstable">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+
+            <th>
+                Deadline
+            </th>
+            <th>
+                Supervisor
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody id="assignedbody">
+        @foreach (WorkTask task in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => task.Title)
+                </td>
+                <td>
+                    @if (DateTime.Now > task.Deadline)
+                    {
+                        <span class="text-danger">Time's up</span>
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(m => task.Deadline)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(m => task.SupervisorUserName)
+                </td>
+                <td>
+                    @Html.ActionLink("Show more info", "ShowTask", "Worker", new { id = task.Id }, null)
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+@section Scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $("#asstaskstable").DataTable(
+                {
+                    "paging": false,
+                    "ordering": false,
+                    "searching": false,
+                    "info": false
+                }
+            );
+        })
+    </script>
+}
+
